@@ -2,7 +2,9 @@
 
 namespace org\ermshaus\phpsog;
 
-require_once './library/org/ermshaus/phpsog/PhpSog.php';
+require_once './library/org/ermshaus/spl/SplClassLoader.php';
+$loader = new \org\ermshaus\spl\SplClassLoader(null, './library');
+$loader->register();
 
 function e($s)
 {
@@ -35,14 +37,28 @@ if (!is_writable($exportDir)) {
 
 // Process content pages
 
-$files = glob($config['project.dir'] . '/' . $config['pages.dir'] . '/*.phtml');
 
-foreach ($files as $file) {
+$dirIter = new \RecursiveDirectoryIterator($config['project.dir'] . '/' . $config['pages.dir']);
+$recursiveIterator = new \RecursiveIteratorIterator($dirIter,
+    \RecursiveIteratorIterator::SELF_FIRST,
+    \RecursiveIteratorIterator::CATCH_GET_CHILD);
+
+$regexIterator = new \RegexIterator($recursiveIterator, '/\.phtml$/i');
+
+foreach ($regexIterator as $file => $unused) {
     $content = $phpsog->processFile($config, $file);
 
+    $relativePath = substr($file, strlen($config['project.dir'] . '/' . $config['pages.dir'] . '/'));
+
     $exportPath = $config['project.dir'] . '/' . $config['export.dir'] . '/'
-            . pathinfo($file, PATHINFO_FILENAME)
+            . pathinfo($relativePath, PATHINFO_DIRNAME) . '/' . pathinfo($relativePath, PATHINFO_FILENAME)
             . '.' . $config['export.fileExtension'];
+
+    if (!file_exists(dirname($exportPath))) {
+        mkdir(dirname($exportPath));
+        echo 'Created dir...' . PHP_EOL;
+        echo '  ' . dirname($exportPath) . PHP_EOL;
+    }
 
     echo 'Exporting... ' . "\n";
     echo '  from: ' . $file . "\n";
@@ -53,11 +69,27 @@ foreach ($files as $file) {
 
 // Copy resources
 
-$files = glob($config['project.dir'] . '/' . $config['resources.dir'] . '/*.*');
+$dirIter = new \RecursiveDirectoryIterator($config['project.dir'] . '/' . $config['resources.dir']);
+$recursiveIterator = new \RecursiveIteratorIterator($dirIter,
+    \RecursiveIteratorIterator::SELF_FIRST,
+    \RecursiveIteratorIterator::CATCH_GET_CHILD);
 
-foreach ($files as $file) {
+foreach ($recursiveIterator as $file => $unused) {
+
+    if (!is_file($file)) {
+        continue;
+    }
+
+    $relativePath = substr($file, strlen($config['project.dir'] . '/' . $config['resources.dir'] . '/'));
+
     $exportPath = $config['project.dir'] . '/' . $config['export.dir'] . '/'
-            . basename($file);
+            . pathinfo($relativePath, PATHINFO_DIRNAME) . '/' . basename($relativePath);
+
+    if (!file_exists(dirname($exportPath))) {
+        mkdir(dirname($exportPath));
+        echo 'Created dir...' . PHP_EOL;
+        echo '  ' . dirname($exportPath) . PHP_EOL;
+    }
 
     echo 'Moving resource...' . "\n";
     echo '  from: ' . $file . "\n";

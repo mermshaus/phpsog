@@ -5,6 +5,8 @@ namespace org\ermshaus\phpsog;
 // Menu hacks
 $x['menuActive'] = (isset($x['menuActive'])) ? $x['menuActive'] : '';
 
+$p = $pathToRoot;
+
 ?><!DOCTYPE html>
 
 <html lang="en">
@@ -12,17 +14,17 @@ $x['menuActive'] = (isset($x['menuActive'])) ? $x['menuActive'] : '';
     <head>
         <meta charset="UTF-8" />
         <title><?=e($title)?></title>
-        <link rel="stylesheet" type="text/css" href="styles.css" />
+        <link rel="stylesheet" type="text/css" href="<?=$p?>styles.css" />
     </head>
 
     <body>
 
-        <a href="./"><img src="phpsog.png" /></a>
+        <a href="<?=$p?>"><img src="<?=$p?>images/phpsog.png" /></a>
 
         <ul class="menu">
-            <li<?=($x['menuActive']==='./')?' class="active"':''?>><a href="./">Home</a></li>
-            <li<?=($x['menuActive']==='about.html')?' class="active"':''?>><a href="about.html">About</a></li>
-            <li<?=($x['menuActive']==='contact.html')?' class="active"':''?>><a href="contact.html">Contact</a></li>
+            <li<?=($x['menuActive']==='home')?' class="active"':''?>><a href="<?=$p?>">Home</a></li>
+            <li<?=($x['menuActive']==='about')?' class="active"':''?>><a href="<?=$p?>about.html">About</a></li>
+            <li<?=($x['menuActive']==='contact')?' class="active"':''?>><a href="<?=$p?>contact.html">Contact</a></li>
         </ul>
 
         <?=$content?>

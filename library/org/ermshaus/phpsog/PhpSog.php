@@ -37,6 +37,8 @@ class PhpSog
     {
         $layout = 'default.phtml';
         $title  = $config['meta.title.default'];
+
+        // Variables form extensions
         $x = array();
 
         ob_start();
@@ -44,11 +46,19 @@ class PhpSog
         include $file;
 
         $content = ob_get_clean();
+        $tmp = substr($file, strlen($config['project.dir'] . '/' . $config['pages.dir'] . '/'));
+
+        $ptr = str_repeat('../', substr_count($tmp, '/'));
+
+        if ($ptr === '') {
+            $ptr = './';
+        }
 
         $vars = array(
-            'title'   => $title . $config['meta.title.suffix'],
-            'content' => $content,
-            'x'       => $x
+            'title'      => $title . $config['meta.title.suffix'],
+            'content'    => $content,
+            'pathToRoot' => $ptr,
+            'x'          => $x
         );
 
         return $this->fillLayout($config['project.dir'] . '/'
