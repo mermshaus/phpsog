@@ -1,0 +1,14 @@
+#!/usr/bin/php
+<?php
+
+try {
+    if ($argc !== 2) {
+        throw new Exception('Wrong argument count');
+    } else {
+        $_GET['config'] = $argv[1];
+    }
+
+    require_once 'phpsog.php';
+} catch (Exception $e) {
+    echo 'Error: ' . $e->getMessage() . PHP_EOL;
+}

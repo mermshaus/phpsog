@@ -1,0 +1,25 @@
+body {
+    background: #fff;
+    color: #000;
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+}
+
+.menu a {
+    display: block;
+    text-decoration: none;
+    padding: 5px;
+    color: #000;
+}
+
+.menu .active {
+    background: #000;
+    color: #fff;
+}
+
+.menu .active a {
+    color: #fff;
+}
