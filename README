@@ -3,3 +3,114 @@ phpsog - PHP Static Output Generator
 This is a very early release.
 
 Marc Ermshaus <marc@ermshaus.org>
+
+
+Quick introduction
+------------------
+
+1. Navigate to phpsog's root directory.
+
+    $ ls .
+
+        blog-content.php    demos   index.php  nbproject  phpsog.php
+        config.default.ini  export  library    phpsog     README
+
+2. Create directories for a new project "hello-world".
+
+    $ mkdir demos/hello-world
+    $ mkdir demos/hello-world/layouts
+    $ mkdir demos/hello-world/pages
+    $ mkdir demos/hello-world/resources
+
+3. Create export directory for generated static HTML output.
+
+    $ mkdir export/hello-world
+
+4. Create a default layout for the project.
+
+    $ touch demos/hello-world/layouts/default.phtml
+
+        <!DOCTYPE html>
+
+        <html lang="en">
+
+            <head>
+                <meta charset="UTF-8" />
+                <title>Hello World Project</title>
+            </head>
+
+            <body>
+
+                <?=$content?>
+
+            </body>
+
+        </html>
+
+5. Create an index page and one other page.
+
+    $ touch demos/hello-world/pages/index.phtml
+
+        <h1>Index page</h1>
+
+    $ touch demos/hello-world/pages/other.phtml
+
+        <h1>Another page</h1>
+
+6. Create a config file. There are more options but setting the export directory
+   will do for now.
+
+    $ touch demos/hello-world/phpsog.ini
+
+        export.dir = "../../export/hello-world"
+
+7. Run phpsog and generate the HTML output.
+
+    $ ./phpsog demos/hello-world
+
+        Exporting...
+          from: /path/phpsog/demos/hello-world/pages/index.phtml
+          to:   /path/phpsog/export/hello-world/index.html
+        Exporting...
+          from: /path/phpsog/demos/hello-world/pages/other.phtml
+          to:   /path/phpsog/export/hello-world/other.html
+
+8. View the generated output.
+
+    $ cat export/hello-world/index.html
+
+        <!DOCTYPE html>
+
+        <html lang="en">
+
+            <head>
+                <meta charset="UTF-8" />
+                <title>Hello World Project</title>
+            </head>
+
+            <body>
+
+                <h1>Index page</h1>
+
+            </body>
+
+        </html>
+
+    $ cat export/hello-world/other.html
+
+        <!DOCTYPE html>
+
+        <html lang="en">
+
+            <head>
+                <meta charset="UTF-8" />
+                <title>Hello World Project</title>
+            </head>
+
+            <body>
+
+                <h1>Another page</h1>
+
+            </body>
+
+        </html>
