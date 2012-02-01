@@ -97,3 +97,21 @@ foreach ($recursiveIterator as $file => $unused) {
 
     copy($file, $exportPath);
 }
+
+// Virtual pages
+
+include_once './blog-content.php';
+
+$blogOverviewPage = '<h1>Blog</h1>';
+
+foreach ($blog as $data) {
+    $content = $phpsog->addVirtualPage($config, '<h1>' . e($data['title']) . '</h1>' . $data['content'], $data['title']);
+
+    file_put_contents($config['project.dir'] . '/' . $config['export.dir'] . '/blog-' . $data['id'] . '.html', $content);
+
+    $blogOverviewPage .= '<p><a href="blog-' . $data['id'] . '.html">' . e($data['title']) . '</a></p>';
+}
+
+$content = $phpsog->addVirtualPage($config, $blogOverviewPage, 'Blog overview');
+
+file_put_contents($config['project.dir'] . '/' . $config['export.dir'] . '/blog.html', $content);
