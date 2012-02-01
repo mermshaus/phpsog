@@ -65,7 +65,7 @@ class PhpSog
                 . $config['layouts.dir'] . '/' . $layout, $vars);
     }
 
-    public function addVirtualPage(array $config, $content, $title = null, $layout = null, $x = array())
+    public function addVirtualPage(array $config, $content, $title = null, $layout = null, $pathToRoot = './', $x = array())
     {
         if ($title === null) {
             $title = $config['meta.title.default'];
@@ -76,9 +76,10 @@ class PhpSog
         }
 
         $vars = array(
-            'title'   => $title . $config['meta.title.suffix'],
-            'content' => $content,
-            'x'       => $x
+            'title'      => $title . $config['meta.title.suffix'],
+            'content'    => $content,
+            'pathToRoot' => $pathToRoot,
+            'x'          => $x
         );
 
         return $this->fillLayout($config['project.dir'] . '/'

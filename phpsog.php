@@ -105,11 +105,19 @@ include_once './blog-content.php';
 $blogOverviewPage = '<h1>Blog</h1>';
 
 foreach ($blog as $data) {
-    $content = $phpsog->addVirtualPage($config, '<h1>' . e($data['title']) . '</h1>' . $data['content'], $data['title']);
+    $content = $phpsog->addVirtualPage($config, '<h1>' . e($data['title']) . '</h1>' . $data['content'], $data['title'], null, '../');
 
-    file_put_contents($config['project.dir'] . '/' . $config['export.dir'] . '/blog-' . $data['id'] . '.html', $content);
+    $exportPath = $config['project.dir'] . '/' . $config['export.dir'] . '/blog/' . $data['id'] . '.html';
 
-    $blogOverviewPage .= '<p><a href="blog-' . $data['id'] . '.html">' . e($data['title']) . '</a></p>';
+    if (!file_exists(dirname($exportPath))) {
+        mkdir(dirname($exportPath));
+        echo 'Created dir...' . PHP_EOL;
+        echo '  ' . dirname($exportPath) . PHP_EOL;
+    }
+    
+    file_put_contents($exportPath, $content);
+
+    $blogOverviewPage .= '<p><a href="blog/' . $data['id'] . '.html">' . e($data['title']) . '</a></p>';
 }
 
 $content = $phpsog->addVirtualPage($config, $blogOverviewPage, 'Blog overview');
