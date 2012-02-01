@@ -54,4 +54,24 @@ class PhpSog
         return $this->fillLayout($config['project.dir'] . '/'
                 . $config['layouts.dir'] . '/' . $layout, $vars);
     }
+
+    public function addVirtualPage(array $config, $content, $title = null, $layout = null, $x = array())
+    {
+        if ($title === null) {
+            $title = $config['meta.title.default'];
+        }
+
+        if ($layout === null) {
+            $layout = 'default.phtml';
+        }
+
+        $vars = array(
+            'title'   => $title . $config['meta.title.suffix'],
+            'content' => $content,
+            'x'       => $x
+        );
+
+        return $this->fillLayout($config['project.dir'] . '/'
+                . $config['layouts.dir'] . '/' . $layout, $vars);
+    }
 }
