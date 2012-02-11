@@ -11,6 +11,8 @@ function e($s)
     return htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
 }
 
+
+
 $params = array(
     'config' => ''
 );
@@ -27,76 +29,18 @@ if (is_dir($params['config'])) {
 
 $phpsog = new PhpSog();
 
-$config = $phpsog->loadConfig($params['config']);
+$phpsog->loadConfig($params['config']);
+$phpsog->sanitizeEnvironment();
 
-$exportDir = $config['project.dir'] . '/' . $config['export.dir'];
-
-if (!is_writable($exportDir)) {
-    throw new \Exception('export directory ' . $exportDir . ' is not writable');
-}
-
-// Process content pages
+$phpsog->processFiles();
+$phpsog->processResources();
 
 
-$dirIter = new \RecursiveDirectoryIterator($config['project.dir'] . '/' . $config['pages.dir']);
-$recursiveIterator = new \RecursiveIteratorIterator($dirIter,
-    \RecursiveIteratorIterator::SELF_FIRST,
-    \RecursiveIteratorIterator::CATCH_GET_CHILD);
 
-$regexIterator = new \RegexIterator($recursiveIterator, '/\.phtml$/i');
 
-foreach ($regexIterator as $file => $unused) {
-    $content = $phpsog->processFile($config, $file);
 
-    $relativePath = substr($file, strlen($config['project.dir'] . '/' . $config['pages.dir'] . '/'));
+exit;
 
-    $exportPath = $config['project.dir'] . '/' . $config['export.dir'] . '/'
-            . pathinfo($relativePath, PATHINFO_DIRNAME) . '/' . pathinfo($relativePath, PATHINFO_FILENAME)
-            . '.' . $config['export.fileExtension'];
-
-    if (!file_exists(dirname($exportPath))) {
-        mkdir(dirname($exportPath));
-        echo 'Created dir...' . PHP_EOL;
-        echo '  ' . dirname($exportPath) . PHP_EOL;
-    }
-
-    echo 'Exporting... ' . "\n";
-    echo '  from: ' . $file . "\n";
-    echo '  to:   ' . $exportPath . "\n";
-
-    file_put_contents($exportPath, $content);
-}
-
-// Copy resources
-
-$dirIter = new \RecursiveDirectoryIterator($config['project.dir'] . '/' . $config['resources.dir']);
-$recursiveIterator = new \RecursiveIteratorIterator($dirIter,
-    \RecursiveIteratorIterator::SELF_FIRST,
-    \RecursiveIteratorIterator::CATCH_GET_CHILD);
-
-foreach ($recursiveIterator as $file => $unused) {
-
-    if (!is_file($file)) {
-        continue;
-    }
-
-    $relativePath = substr($file, strlen($config['project.dir'] . '/' . $config['resources.dir'] . '/'));
-
-    $exportPath = $config['project.dir'] . '/' . $config['export.dir'] . '/'
-            . pathinfo($relativePath, PATHINFO_DIRNAME) . '/' . basename($relativePath);
-
-    if (!file_exists(dirname($exportPath))) {
-        mkdir(dirname($exportPath));
-        echo 'Created dir...' . PHP_EOL;
-        echo '  ' . dirname($exportPath) . PHP_EOL;
-    }
-
-    echo 'Moving resource...' . "\n";
-    echo '  from: ' . $file . "\n";
-    echo '  to:   ' . $exportPath . "\n";
-
-    copy($file, $exportPath);
-}
 
 // Virtual pages
 
@@ -114,7 +58,7 @@ foreach ($blog as $data) {
         echo 'Created dir...' . PHP_EOL;
         echo '  ' . dirname($exportPath) . PHP_EOL;
     }
-    
+
     file_put_contents($exportPath, $content);
 
     $blogOverviewPage .= '<p><a href="blog/' . $data['id'] . '.html">' . e($data['title']) . '</a></p>';

@@ -1,9 +1,23 @@
 <?php
+/**
+ *
+ */
 
 namespace org\ermshaus\phpsog;
 
+/**
+ *
+ */
 class PhpSog
 {
+    /** @var array */
+    protected $config;
+
+    /**
+     *
+     * @param type $pathToConfig
+     * @return type
+     */
     public function loadConfig($pathToConfig)
     {
         $pathToConfig = realpath($pathToConfig);
@@ -18,9 +32,31 @@ class PhpSog
 
         $projectConfig['project.dir'] = $projectDir;
 
+        $this->config = $projectConfig;
+
         return $projectConfig;
     }
 
+    /**
+     *
+     */
+    public function sanitizeEnvironment()
+    {
+        $config = $this->config;
+
+        $exportDir = $config['project.dir'] . '/' . $config['export.dir'];
+
+        if (!is_writable($exportDir)) {
+            throw new \Exception('export directory ' . $exportDir . ' is not writable');
+        }
+    }
+
+    /**
+     *
+     * @param type $layoutFile
+     * @param array $vars
+     * @return type
+     */
     protected function fillLayout($layoutFile, array $vars)
     {
         unset($vars['layoutFile']);
@@ -33,38 +69,126 @@ class PhpSog
         return ob_get_clean();
     }
 
-    public function processFile(array $config, $file)
+    /**
+     *
+     * @param array $config
+     * @param type $file
+     */
+    public function processFiles()
     {
-        $layout = 'default.phtml';
-        $title  = $config['meta.title.default'];
+        $config = $this->config;
 
-        // Variables form extensions
-        $x = array();
+        $dirIter = new \RecursiveDirectoryIterator($config['project.dir'] . '/' . $config['pages.dir']);
+        $recursiveIterator = new \RecursiveIteratorIterator($dirIter,
+            \RecursiveIteratorIterator::SELF_FIRST,
+            \RecursiveIteratorIterator::CATCH_GET_CHILD);
 
-        ob_start();
+        $regexIterator = new \RegexIterator($recursiveIterator, '/\.phtml$/i');
 
-        include $file;
+        foreach ($regexIterator as $file => $unused) {
+                $layout = 'default.phtml';
+            $title  = $config['meta.title.default'];
 
-        $content = ob_get_clean();
-        $tmp = substr($file, strlen($config['project.dir'] . '/' . $config['pages.dir'] . '/'));
+            // Variables form extensions
+            $x = array();
 
-        $ptr = str_repeat('../', substr_count($tmp, '/'));
+            ob_start();
 
-        if ($ptr === '') {
-            $ptr = './';
+            include $file;
+
+            $content = ob_get_clean();
+            $tmp = substr($file, strlen($config['project.dir'] . '/' . $config['pages.dir'] . '/'));
+
+            $ptr = str_repeat('../', substr_count($tmp, '/'));
+
+            if ($ptr === '') {
+                $ptr = './';
+            }
+
+            $vars = array(
+                'title'      => $title . $config['meta.title.suffix'],
+                'content'    => $content,
+                'pathToRoot' => $ptr,
+                'x'          => $x
+            );
+
+            $contentx = $this->fillLayout($config['project.dir'] . '/'
+                    . $config['layouts.dir'] . '/' . $layout, $vars);
+
+            $relativePath = substr($file, strlen($config['project.dir'] . '/' . $config['pages.dir'] . '/'));
+
+            $exportPath = $config['project.dir'] . '/' . $config['export.dir'] . '/'
+                    . pathinfo($relativePath, PATHINFO_DIRNAME) . '/' . pathinfo($relativePath, PATHINFO_FILENAME)
+                    . '.' . $config['export.fileExtension'];
+
+            $this->export($exportPath, $contentx);
         }
-
-        $vars = array(
-            'title'      => $title . $config['meta.title.suffix'],
-            'content'    => $content,
-            'pathToRoot' => $ptr,
-            'x'          => $x
-        );
-
-        return $this->fillLayout($config['project.dir'] . '/'
-                . $config['layouts.dir'] . '/' . $layout, $vars);
     }
 
+    /**
+     *
+     * @param type $config
+     */
+    public function processResources()
+    {
+        $config = $this->config;
+
+        $dirIter = new \RecursiveDirectoryIterator($config['project.dir'] . '/' . $config['resources.dir']);
+        $recursiveIterator = new \RecursiveIteratorIterator($dirIter,
+            \RecursiveIteratorIterator::SELF_FIRST,
+            \RecursiveIteratorIterator::CATCH_GET_CHILD);
+
+        foreach ($recursiveIterator as $file => $unused) {
+
+            if (!is_file($file)) {
+                continue;
+            }
+
+            $relativePath = substr($file, strlen($config['project.dir'] . '/' . $config['resources.dir'] . '/'));
+
+            $exportPath = $config['project.dir'] . '/' . $config['export.dir'] . '/'
+                    . pathinfo($relativePath, PATHINFO_DIRNAME) . '/' . basename($relativePath);
+
+            $content = file_get_contents($file);
+
+            $this->export($exportPath, $content);
+        }
+    }
+
+    /**
+     *
+     */
+    public function export($exportPath, $content)
+    {
+        $ph = new \org\ermshaus\filesystem\PathHelper();
+
+        if (!file_exists(dirname($exportPath))) {
+            mkdir(dirname($exportPath));
+            echo '  [mkdir] ' . $ph->normalize(dirname($exportPath)) . PHP_EOL;
+        }
+
+        $normPath = $ph->normalize($exportPath);
+
+        if (strpos($normPath, getcwd()) === 0) {
+            $normPath = substr($normPath, strlen(getcwd()));
+            $normPath = ltrim($normPath, '/');
+        }
+
+        echo '  [export] ' . $normPath . PHP_EOL;
+
+        file_put_contents($exportPath, $content);
+    }
+
+    /**
+     *
+     * @param array $config
+     * @param type $content
+     * @param array $title
+     * @param string $layout
+     * @param type $pathToRoot
+     * @param type $x
+     * @return type
+     */
     public function addVirtualPage(array $config, $content, $title = null, $layout = null, $pathToRoot = './', $x = array())
     {
         if ($title === null) {
