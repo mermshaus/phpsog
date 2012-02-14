@@ -29,7 +29,10 @@ if (is_dir($params['config'])) {
 
 $phpsog = new PhpSog();
 
-$phpsog->loadConfig($params['config']);
+$config = $phpsog->loadConfig($params['config']);
+if(array_key_exists('general.timezone', $config)) {
+    date_default_timezone_set($config['general.timezone']);
+}
 $phpsog->sanitizeEnvironment();
 
 $phpsog->processFiles();
