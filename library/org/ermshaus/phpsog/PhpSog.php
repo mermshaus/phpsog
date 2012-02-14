@@ -13,6 +13,17 @@ class PhpSog
     /** @var array */
     protected $config;
 
+    /** @var \org\ermshaus\filesystem\PathHelper */
+    protected $pathHelper;
+
+    /**
+     *
+     */
+    public function __construct()
+    {
+        $this->pathHelper = new \org\ermshaus\filesystem\PathHelper();
+    }
+
     /**
      *
      * @param type $pathToConfig
@@ -80,6 +91,8 @@ class PhpSog
     {
         $config = $this->config;
 
+        $ph = $this->pathHelper;
+
         $dirIter = new \RecursiveDirectoryIterator($config['project.dir'] . '/' . $config['pages.dir']);
         $recursiveIterator = new \RecursiveIteratorIterator($dirIter,
             \RecursiveIteratorIterator::SELF_FIRST,
@@ -110,7 +123,7 @@ class PhpSog
             $vars = array(
                 'title'      => $title . $config['meta.title.suffix'],
                 'content'    => $content,
-                'pathToRoot' => $ptr,
+                'pathToRoot' => $ph->normalize($ptr),
                 'x'          => $x
             );
 
@@ -162,7 +175,7 @@ class PhpSog
      */
     public function export($exportPath, $content)
     {
-        $ph = new \org\ermshaus\filesystem\PathHelper();
+        $ph = $this->pathHelper;
 
         if (!file_exists(dirname($exportPath))) {
             mkdir(dirname($exportPath));
@@ -191,8 +204,11 @@ class PhpSog
      * @param type $x
      * @return type
      */
-    public function addVirtualPage(array $config, $content, $title = null, $layout = null, $pathToRoot = './', $x = array())
+    public function addVirtualPage(array $config, $content, $title = null,
+            $layout = null, $pathToRoot = '.', $x = array())
     {
+        $ph = $this->pathHelper;
+
         if ($title === null) {
             $title = $config['meta.title.default'];
         }
@@ -204,7 +220,7 @@ class PhpSog
         $vars = array(
             'title'      => $title . $config['meta.title.suffix'],
             'content'    => $content,
-            'pathToRoot' => $pathToRoot,
+            'pathToRoot' => $ph->normalize($pathToRoot),
             'x'          => $x
         );
 

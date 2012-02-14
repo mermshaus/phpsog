@@ -14,17 +14,17 @@ $p = $pathToRoot;
     <head>
         <meta charset="UTF-8" />
         <title><?=e($title)?></title>
-        <link rel="stylesheet" type="text/css" href="<?=$p?>styles.css" />
+        <link rel="stylesheet" type="text/css" href="<?=$p?>/styles.css" />
     </head>
 
     <body>
 
-        <a href="<?=$p?>"><img src="<?=$p?>images/phpsog.png" /></a>
+        <a href="<?=$p?>/"><img src="<?=$p?>/images/phpsog.png" /></a>
 
         <ul class="menu">
-            <li<?=($x['menuActive']==='home')?' class="active"':''?>><a href="<?=$p?>">Home</a></li>
-            <li<?=($x['menuActive']==='about')?' class="active"':''?>><a href="<?=$p?>about.html">About</a></li>
-            <li<?=($x['menuActive']==='contact')?' class="active"':''?>><a href="<?=$p?>contact.html">Contact</a></li>
+            <li<?=($x['menuActive']==='home')?' class="active"':''?>><a href="<?=$p?>/">Home</a></li>
+            <li<?=($x['menuActive']==='about')?' class="active"':''?>><a href="<?=$p?>/about.html">About</a></li>
+            <li<?=($x['menuActive']==='contact')?' class="active"':''?>><a href="<?=$p?>/contact.html">Contact</a></li>
         </ul>
 
         <?=$content?>
