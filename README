@@ -68,12 +68,8 @@ Quick introduction
 
     $ ./phpsog demos/hello-world
 
-        Exporting...
-          from: /path/phpsog/demos/hello-world/pages/index.phtml
-          to:   /path/phpsog/export/hello-world/index.html
-        Exporting...
-          from: /path/phpsog/demos/hello-world/pages/other.phtml
-          to:   /path/phpsog/export/hello-world/other.html
+        [export] export/hello-world/index.html
+        [export] export/hello-world/other.html
 
 8. View the generated output.
 
