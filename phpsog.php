@@ -11,8 +11,6 @@ function e($s)
     return htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
 }
 
-
-
 $params = array(
     'config' => ''
 );
@@ -29,10 +27,8 @@ if (is_dir($params['config'])) {
 
 $phpsog = new PhpSog();
 
-$config = $phpsog->loadConfig($params['config']);
-if(array_key_exists('general.timezone', $config)) {
-    date_default_timezone_set($config['general.timezone']);
-}
+$phpsog->loadConfig($params['config']);
+
 $phpsog->sanitizeEnvironment();
 
 $phpsog->processFiles();

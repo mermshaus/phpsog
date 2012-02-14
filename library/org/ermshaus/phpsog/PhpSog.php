@@ -32,6 +32,8 @@ class PhpSog
 
         $projectConfig['project.dir'] = $projectDir;
 
+        date_default_timezone_set($projectConfig['general.timezone']);
+
         $this->config = $projectConfig;
 
         return $projectConfig;
