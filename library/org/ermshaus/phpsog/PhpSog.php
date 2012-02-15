@@ -178,7 +178,7 @@ class PhpSog
         $ph = $this->pathHelper;
 
         if (!file_exists(dirname($exportPath))) {
-            mkdir(dirname($exportPath));
+            mkdir(dirname($exportPath), 0777, true);
             echo '  [mkdir] ' . $ph->normalize(dirname($exportPath)) . PHP_EOL;
         }
 
