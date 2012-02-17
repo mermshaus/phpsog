@@ -1,0 +1,3 @@
+[submodule "library/Kaloa"]
+	path = library/Kaloa
+	url = git://github.com/mermshaus/Kaloa.git

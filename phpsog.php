@@ -2,8 +2,13 @@
 
 namespace org\ermshaus\phpsog;
 
-require_once './library/org/ermshaus/spl/SplClassLoader.php';
-$loader = new \org\ermshaus\spl\SplClassLoader(null, './library');
+use \Exception;
+use \Kaloa\Loader;
+
+require_once './library/Kaloa/library/Kaloa/Loader.php';
+$loader = new Loader('org\\ermshaus', './library');
+$loader->register();
+$loader = new Loader('Kaloa', './library/Kaloa/library');
 $loader->register();
 
 function e($s)
@@ -16,7 +21,7 @@ $params = array(
 );
 
 if (!isset($_GET['config'])) {
-    throw new \Exception('Config not set');
+    throw new Exception('Config not set');
 } else {
     $params['config'] = (string) $_GET['config'];
 }

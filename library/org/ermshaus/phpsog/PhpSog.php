@@ -5,6 +5,8 @@
 
 namespace org\ermshaus\phpsog;
 
+use \Kaloa\Filesystem\PathHelper;
+
 /**
  *
  */
@@ -13,7 +15,7 @@ class PhpSog
     /** @var array */
     protected $config;
 
-    /** @var \org\ermshaus\filesystem\PathHelper */
+    /** @var PathHelper */
     protected $pathHelper;
 
     /**
@@ -21,7 +23,7 @@ class PhpSog
      */
     public function __construct()
     {
-        $this->pathHelper = new \org\ermshaus\filesystem\PathHelper();
+        $this->pathHelper = new PathHelper();
     }
 
     /**
