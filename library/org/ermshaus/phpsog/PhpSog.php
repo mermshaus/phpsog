@@ -5,7 +5,7 @@
 
 namespace org\ermshaus\phpsog;
 
-use \Kaloa\Filesystem\PathHelper;
+use Kaloa\Filesystem\PathHelper;
 
 /**
  *

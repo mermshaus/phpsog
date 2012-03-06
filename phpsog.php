@@ -2,8 +2,8 @@
 
 namespace org\ermshaus\phpsog;
 
-use \Exception;
-use \Kaloa\Loader;
+use Exception;
+use Kaloa\Loader;
 
 require_once './vendor/.composer/autoload.php';
 
