@@ -1,2 +1,4 @@
-export/
-nbproject/
+/export/
+/nbproject/
+/vendor/
+/composer.phar

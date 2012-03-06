@@ -5,10 +5,9 @@ namespace org\ermshaus\phpsog;
 use \Exception;
 use \Kaloa\Loader;
 
-require_once './library/Kaloa/library/Kaloa/Loader.php';
+require_once './vendor/.composer/autoload.php';
+
 $loader = new Loader('org\\ermshaus', './library');
-$loader->register();
-$loader = new Loader('Kaloa', './library/Kaloa/library');
 $loader->register();
 
 function e($s)

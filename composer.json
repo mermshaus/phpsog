@@ -1,0 +1,28 @@
+{
+    "repositories":[
+        {
+            "type":"package",
+            "package":{
+                "name":"kaloa/kaloa",
+                "version":"1.0.0",
+                "dist":{
+                    "url":"https://github.com/mermshaus/Kaloa/zipball/bc070039687fbe8e6cc60e0dbb44823a5d14ad5b",
+                    "type":"zip"
+                },
+                "source":{
+                    "url":"git://github.com/mermshaus/Kaloa.git",
+                    "type":"git",
+                    "reference":"bc070039687fbe8e6cc60e0dbb44823a5d14ad5b"
+                },
+                "autoload":{
+                    "psr-0":{
+                        "Kaloa":"library/"
+                    }
+                }
+            }
+        }
+    ],
+    "require":{
+        "kaloa/kaloa":"1.0.0"
+    }
+}
