@@ -1,4 +1,17 @@
 {
+    "name": "phpsog/phpsog",
+    "description": "PHP Static Output Generator",
+    "keywords": ["cache", "compiler"],
+    "homepage": "https://github.com/mermshaus/phpsog",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Marc Ermshaus",
+            "email": "marc@ermshaus.org",
+            "homepage": "http://www.ermshaus.org/"
+        }
+    ],
     "repositories":[
         {
             "type":"package",
@@ -9,11 +22,6 @@
                     "url":"https://github.com/mermshaus/Kaloa/zipball/bc070039687fbe8e6cc60e0dbb44823a5d14ad5b",
                     "type":"zip"
                 },
-                "source":{
-                    "url":"git://github.com/mermshaus/Kaloa.git",
-                    "type":"git",
-                    "reference":"bc070039687fbe8e6cc60e0dbb44823a5d14ad5b"
-                },
                 "autoload":{
                     "psr-0":{
                         "Kaloa":"library/"
@@ -23,6 +31,13 @@
         }
     ],
     "require":{
+        "php": ">=5.3.0",
         "kaloa/kaloa":"1.0.0"
-    }
+    },
+    "autoload": {
+        "psr-0": { "Phpsog": "library/" }
+    },
+    "bin":[
+        "phpsog"
+    ]
 }

@@ -1,14 +1,38 @@
 #!/usr/bin/env php
 <?php
 
+if ((!@include __DIR__.'/../../.composer/autoload.php') && (!@include __DIR__.'/vendor/.composer/autoload.php')) {
+    die('You must set up the project dependencies, run the following commands:'.PHP_EOL.
+        'curl -s http://getcomposer.org/installer | php'.PHP_EOL.
+        'php composer.phar install'.PHP_EOL);
+}
+
+use Phpsog\Application;
+
 try {
+    $params = array(
+        'config' => ''
+    );
+
     if ($argc !== 2) {
         throw new Exception('Wrong argument count');
     } else {
-        $_GET['config'] = $argv[1];
+        $params['config'] = $argv[1];
     }
 
-    require_once 'phpsog.php';
+    if (is_dir($params['config'])) {
+        $params['config'] .= '/phpsog.ini';
+    }
+
+    $phpsog = new Application();
+
+    $phpsog->loadConfig($params['config']);
+
+    $phpsog->sanitizeEnvironment();
+
+    $phpsog->processFiles();
+    $phpsog->processResources();
+
 } catch (Exception $e) {
-    echo 'Error: ' . $e->getMessage() . PHP_EOL;
+    die('Error: ' . $e->getMessage() . PHP_EOL);
 }
