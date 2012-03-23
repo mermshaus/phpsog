@@ -1,7 +1,4 @@
 <?php
-/**
- *
- */
 
 namespace Phpsog;
 
@@ -21,7 +18,7 @@ function e($s)
 class Application
 {
     /** @var array */
-    protected $config;
+    protected $config = array();
 
     /** @var PathHelper */
     protected $pathHelper;
@@ -36,8 +33,8 @@ class Application
 
     /**
      *
-     * @param type $pathToConfig
-     * @return type
+     * @param  string $pathToConfig
+     * @return array
      */
     public function loadConfig($pathToConfig)
     {
@@ -70,15 +67,17 @@ class Application
         $exportDir = $config['project.dir'] . '/' . $config['export.dir'];
 
         if (!is_writable($exportDir)) {
-            throw new \Exception('export directory ' . $exportDir . ' is not writable');
+            throw new \Exception('export directory '
+                    . $this->pathHelper->normalize($exportDir)
+                    . ' is not writable');
         }
     }
 
     /**
      *
-     * @param type $layoutFile
-     * @param array $vars
-     * @return type
+     * @param  string $layoutFile
+     * @param  array  $vars
+     * @return string
      */
     protected function fillLayout($layoutFile, array $vars)
     {
@@ -94,8 +93,6 @@ class Application
 
     /**
      *
-     * @param array $config
-     * @param type $file
      */
     public function processFiles()
     {
@@ -152,7 +149,6 @@ class Application
 
     /**
      *
-     * @param type $config
      */
     public function processResources()
     {
@@ -190,6 +186,8 @@ class Application
 
     /**
      *
+     * @param string $exportPath
+     * @param string $content
      */
     public function export($exportPath, $content)
     {
