@@ -1,9 +1,10 @@
 {
-    "hash": "dbcc749d794a1720fe017cf81ed0c1ee",
+    "hash": "2fd209cb61e6a411fd336ba167aa406b",
     "packages": [
         {
-            "package": "kaloa/kaloa",
-            "version": "1.0.0"
+            "package": "kaloa/filesystem",
+            "version": "dev-master",
+            "source-reference": "620d0aeb0ed41d3e0203c13eca9f360ed8d1cfd4"
         }
     ],
     "aliases": []
