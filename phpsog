@@ -14,7 +14,9 @@ if (
 use Phpsog\Application;
 use Phpsog\Exporter;
 use Phpsog\Logger;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Kaloa\Filesystem\PathHelper;
+use Phpsog\ExportEvent;
 
 try {
     $params = array(
@@ -39,10 +41,27 @@ try {
             $params['config'] .= '/phpsog.ini';
         }
 
-        $ph = new PathHelper();
-        $logger = new Logger();
+        $ph         = new PathHelper();
+        $dispatcher = new EventDispatcher();
+        $exporter   = new Exporter($ph, $dispatcher);
+        $logger     = new Logger();
+        $adapt = function (ExportEvent $event) use ($logger) {
+            $logger->onExport($event);
+        };
+        $dispatcher->addListener('onExport', $adapt);
+        $dispatcher->addListener('onMkdir', $adapt);
 
-        $phpsog = new Application(new Exporter($ph, $logger), $ph);
+        $exportCounter = 0;
+        $mkdirCounter = 0;
+
+        $dispatcher->addListener('onExport', function () use (&$exportCounter) {
+            $exportCounter++;
+        });
+        $dispatcher->addListener('onMkdir', function () use (&$mkdirCounter) {
+            $mkdirCounter++;
+        });
+
+        $phpsog     = new Application($exporter, $ph);
 
         $phpsog->loadConfig($params['config']);
 
@@ -50,8 +69,10 @@ try {
 
         $phpsog->processHtmlProvider();
         $phpsog->processResources();
-    }
 
+        $logger->log("\n" . 'Event count:    Export: ' . $exportCounter
+                . '    Mkdir: ' . $mkdirCounter);
+    }
 } catch (Exception $e) {
     die('Error: ' . $e->getMessage() . "\n");
 }
