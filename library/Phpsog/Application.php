@@ -106,24 +106,6 @@ class Application
 
     /**
      *
-     * @param  string $layoutFile
-     * @param  array  $vars
-     * @return string
-     */
-    protected function fillLayout($layoutFile, array $vars)
-    {
-        unset($vars['layoutFile']);
-        extract($vars);
-
-        ob_start();
-
-        include $layoutFile;
-
-        return ob_get_clean();
-    }
-
-    /**
-     *
      */
     public function processHtmlProvider()
     {
@@ -177,39 +159,5 @@ class Application
 
             $provider->compile(new SplFileInfo($file));
         }
-    }
-
-    /**
-     *
-     * @param  array  $config
-     * @param  string $content
-     * @param  string $title
-     * @param  string $layout
-     * @param  string $pathToRoot
-     * @param  array  $x
-     * @return string
-     */
-    public function addVirtualPage(array $config, $content, $title = null,
-            $layout = null, $pathToRoot = '.', $x = array())
-    {
-        $ph = $this->pathHelper;
-
-        if ($title === null) {
-            $title = $config['meta.title.default'];
-        }
-
-        if ($layout === null) {
-            $layout = 'default.phtml';
-        }
-
-        $vars = array(
-            'title'      => $title . $config['meta.title.suffix'],
-            'content'    => $content,
-            'pathToRoot' => $ph->normalize($pathToRoot),
-            'x'          => $x
-        );
-
-        return $this->fillLayout($config['project.dir'] . '/'
-                . $config['layouts.dir'] . '/' . $layout, $vars);
     }
 }
