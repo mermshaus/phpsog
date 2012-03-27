@@ -16,9 +16,12 @@ $json = json_decode(file_get_contents(__DIR__ . '/settings.json'));
 <dl>
 <?php foreach ($json->data as $d) : ?>
 
-    <?php if (in_array($d->type, array('string', 'path'))) {
-        $default = '"' . $d->default . '"';
-    } ?>
+    <?php
+    $default = $d->default;
+    if (in_array($d->type, array('string', 'path'))) {
+        $default = '"' . $default . '"';
+    }
+    ?>
 
 <dt><code><?=$d->name?></code> (<?=$d->type?>, default: <?=$default?>)</dt>
 <dd><?=$d->description?></dd>
