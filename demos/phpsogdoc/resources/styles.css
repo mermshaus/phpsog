@@ -21,7 +21,7 @@ body {
     background: #f9f9f9;
     border: 0.5em solid #ddd;
     color: #222;
-    width: 40em;
+    width: 45em;
     padding: 2em;
     margin: 2em auto;
 }
@@ -74,4 +74,27 @@ header a {
 
 pre, code {
     font-family: Inconsolata, monospace;
+}
+
+pre {
+    border: 1px solid #ccc;
+    background: #eee;
+    padding: 1em;
+}
+
+footer {
+    font-size: small;
+    text-align: center;
+}
+
+dt, dd {
+    margin: .5em;
+}
+
+dd {
+    margin-left: 3em;
+}
+
+dt {
+    margin-top: 1em;
 }
