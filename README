@@ -7,15 +7,44 @@ This is a very early release.
 Marc Ermshaus <marc@ermshaus.org>
 
 
+Take a look at webdevbuch <https://github.com/mermshaus/webdevbuch> to see how
+phpsog may be used as a build tool within a project. A live version of the
+compiled project is available at <http://buch.ermshaus.org/>.
+
+If phpsog is not what you are looking for, you might want to try Victor
+Farazdagi’s phrozn <http://www.phrozn.info/>.
+
+
+Setup
+-----
+
+This step is needed to set up your phpsog distribution. phpsog uses Composer
+<http://getcomposer.org/> and Packagist <http://packagist.org/> for dependency
+management. Run the following commands from the project’s root directory to
+install the dependencies. They will be written to the ./vendor subdirectory.
+
+    $ curl -s http://getcomposer.org/installer | php
+    $ php composer.phar install
+
+All depedencies are listed in ./composer.json.
+
+
+Compile the documentation
+-------------------------
+
+phpsog comes bundled with the source files for its documentation website. Run
+these commands from the root directory to create the website in
+./export/phpsogdoc.
+
+    $ mkdir ./export/phpsogdoc
+    $ ./phpsog demos/phpsogdoc
+
+
 Quick introduction
 ------------------
 
-1. Navigate to phpsog's root directory.
-
-    $ ls .
-
-        blog-content.php    demos   index.php  nbproject  phpsog.php
-        config.default.ini  export  library    phpsog     README
+1. Navigate to phpsog's root directory. (The directory containing the README
+   file and the phpsog executable.)
 
 2. Create directories for a new project "hello-world".
 
@@ -49,6 +78,9 @@ Quick introduction
 
         </html>
 
+   Note the line with <?=$content?>. This is where an individual page’s content
+   will be written into the layout file.
+
 5. Create an index page and one other page.
 
     $ touch demos/hello-world/pages/index.phtml
@@ -60,7 +92,7 @@ Quick introduction
         <h1>Another page</h1>
 
 6. Create a config file. There are more options but setting the export directory
-   will do for now.
+   will do for now. All paths are relative to the config file’s location.
 
     $ touch demos/hello-world/phpsog.ini
 
