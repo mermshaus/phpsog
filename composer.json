@@ -1,20 +1,21 @@
 {
-    "name": "phpsog/phpsog",
+    "name":        "phpsog/phpsog",
     "description": "PHP Static Output Generator",
-    "keywords": ["cache", "compiler"],
-    "homepage": "https://github.com/mermshaus/phpsog",
-    "type": "library",
-    "license": "MIT",
+    "keywords":    ["cache", "compiler"],
+    "homepage":    "https://github.com/mermshaus/phpsog",
+    "type":        "library",
+    "license":     "MIT",
     "authors": [
         {
-            "name": "Marc Ermshaus",
-            "email": "marc@ermshaus.org",
+            "name":     "Marc Ermshaus",
+            "email":    "marc@ermshaus.org",
             "homepage": "http://www.ermshaus.org/"
         }
     ],
-    "require":{
-        "php": ">=5.3.0",
-        "kaloa/filesystem":"*"
+    "require": {
+        "php":                      ">=5.3.2",
+        "kaloa/filesystem":         "*",
+        "symfony/event-dispatcher": "2.0.12"
     },
     "autoload": {
         "psr-0": { "Phpsog": "library/" }

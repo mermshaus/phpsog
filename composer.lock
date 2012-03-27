@@ -1,10 +1,14 @@
 {
-    "hash": "2fd209cb61e6a411fd336ba167aa406b",
+    "hash": "2d5e683fe1dce8d3eacfd968674a9d64",
     "packages": [
         {
             "package": "kaloa/filesystem",
             "version": "dev-master",
             "source-reference": "620d0aeb0ed41d3e0203c13eca9f360ed8d1cfd4"
+        },
+        {
+            "package": "symfony/event-dispatcher",
+            "version": "v2.0.12"
         }
     ],
     "aliases": []
