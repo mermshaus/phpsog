@@ -17,16 +17,6 @@ use Phpsog\Exporter;
 
 /**
  *
- * @param  string $s
- * @return string
- */
-function e($s)
-{
-    return htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
-}
-
-/**
- *
  * @author Marc Ermshaus <marc@ermshaus.org>
  */
 class Application
@@ -119,7 +109,8 @@ class Application
 
         $regexIterator = new RegexIterator($recursiveIterator, '/\.phtml$/i');
 
-        $htmlProvider = new HtmlProvider($this->config, $this->exporter, $this->pathHelper);
+        $htmlProvider = new HtmlProvider($this->config, $this->exporter,
+                $this->pathHelper);
 
         foreach ($regexIterator as $file => $unused) {
             $htmlProvider->setLayout('default.phtml');
@@ -149,15 +140,13 @@ class Application
             RecursiveIteratorIterator::SELF_FIRST,
             RecursiveIteratorIterator::CATCH_GET_CHILD);
 
-        $provider = new AssetProvider($this->config, $this->exporter, $this->pathHelper);
+        $provider = new AssetProvider($this->config, $this->exporter,
+                $this->pathHelper);
 
         foreach ($recursiveIterator as $file => $unused) {
-
-            if (!is_file($file)) {
-                continue;
+            if (is_file($file)) {
+                $provider->compile(new SplFileInfo($file));
             }
-
-            $provider->compile(new SplFileInfo($file));
         }
     }
 }

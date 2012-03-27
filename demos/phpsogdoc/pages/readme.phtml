@@ -1,7 +1,5 @@
 <?php
 
-namespace Phpsog;
-
 /* @var $this Phpsog\Provider\Html\Provider */
 $this->setTitle('README');
 
@@ -9,4 +7,4 @@ $this->setTitle('README');
 
 <p>This is the README file from your phpsog distribution.</p>
 
-<pre><?=e(file_get_contents(__DIR__ . '/../../../README'))?></pre>
+<pre><?=$this->escape(file_get_contents(__DIR__ . '/../../../README'))?></pre>

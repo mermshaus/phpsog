@@ -154,4 +154,14 @@ class Provider
 
         $this->exporter->export($exportPath, $contentx);
     }
+
+    /**
+     *
+     * @param  string $s
+     * @return string
+     */
+    public function escape($s)
+    {
+        return htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
+    }
 }

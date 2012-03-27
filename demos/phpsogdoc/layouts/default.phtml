@@ -1,6 +1,6 @@
 <?php
 
-namespace Phpsog;
+/* @var $this Phpsog\Provider\Html\Provider */
 
 // Menu hacks
 $x['menuActive'] = (isset($x['menuActive'])) ? $x['menuActive'] : '';
@@ -13,7 +13,7 @@ $p = $pathToRoot;
 
     <head>
         <meta charset="UTF-8" />
-        <title><?=e($title)?></title>
+        <title><?=$this->escape($title)?></title>
         <link rel="stylesheet" type="text/css" href="<?=$p?>/styles.css" />
     </head>
 
@@ -39,7 +39,7 @@ $p = $pathToRoot;
         </div>
 
         <footer>
-            <p>Last compiled on: <?=e(date('Y-m-d H:i:s e'))?></p>
+            <p>Last compiled on: <?=$this->escape(date('Y-m-d H:i:s e'))?></p>
         </footer>
 
     </body>
