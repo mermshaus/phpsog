@@ -93,6 +93,10 @@ class Application
 
         $exportDir = $config['project.dir'] . '/' . $config['export.dir'];
 
+        if (!file_exists($exportDir)) {
+            $this->exporter->mkdir($exportDir);
+        }
+
         if (!is_writable($exportDir)) {
             throw new Exception('export directory '
                     . $this->pathHelper->normalize($exportDir)

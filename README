@@ -51,7 +51,6 @@ phpsog comes bundled with the source files for its documentation website. Run
 these commands from the root directory to create the website in
 ./export/phpsogdoc.
 
-    $ mkdir ./export/phpsogdoc
     $ ./phpsog demos/phpsogdoc
 
 
