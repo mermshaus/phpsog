@@ -30,7 +30,7 @@ try {
 
     $phpsog->sanitizeEnvironment();
 
-    $phpsog->processFiles();
+    $phpsog->processHtmlProvider();
     $phpsog->processResources();
 
 } catch (Exception $e) {

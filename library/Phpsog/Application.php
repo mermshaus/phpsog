@@ -7,6 +7,11 @@ use UnexpectedValueException;
 use Exception;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use SplFileInfo;
+
+use Phpsog\Provider\Html\Provider as HtmlProvider;
+
+use Phpsog\Exporter;
 
 /**
  *
@@ -36,10 +41,17 @@ class Application
 
     /**
      *
+     * @var Exporter
+     */
+    protected $exporter;
+
+    /**
+     *
      */
     public function __construct()
     {
         $this->pathHelper = new PathHelper();
+        $this->exporter = new Exporter($this->pathHelper);
     }
 
     /**
@@ -105,11 +117,9 @@ class Application
     /**
      *
      */
-    public function processFiles()
+    public function processHtmlProvider()
     {
         $config = $this->config;
-
-        $ph = $this->pathHelper;
 
         $dirIter = new \RecursiveDirectoryIterator($config['project.dir']
                  . '/' . $config['pages.dir']);
@@ -119,46 +129,12 @@ class Application
 
         $regexIterator = new \RegexIterator($recursiveIterator, '/\.phtml$/i');
 
+        $htmlProvider = new HtmlProvider($this->exporter, $this->config);
+
         foreach ($regexIterator as $file => $unused) {
-            $layout = 'default.phtml';
-            $title  = $config['meta.title.default'];
-
-            // Variables form extensions
-            $x = array();
-
-            ob_start();
-
-            include $file;
-
-            $content = ob_get_clean();
-            $tmp = substr($file, strlen($config['project.dir']
-                 . '/' . $config['pages.dir'] . '/'));
-
-            $ptr = str_repeat('../', substr_count($tmp, '/'));
-
-            if ($ptr === '') {
-                $ptr = './';
-            }
-
-            $vars = array(
-                'title'      => $title . $config['meta.title.suffix'],
-                'content'    => $content,
-                'pathToRoot' => $ph->normalize($ptr),
-                'x'          => $x
-            );
-
-            $contentx = $this->fillLayout($config['project.dir']
-                      . '/' . $config['layouts.dir'] . '/' . $layout, $vars);
-
-            $relativePath = substr($file, strlen($config['project.dir']
-                          . '/' . $config['pages.dir'] . '/'));
-
-            $exportPath = $config['project.dir'] . '/' . $config['export.dir']
-                    . '/' . pathinfo($relativePath, PATHINFO_DIRNAME)
-                    . '/' . pathinfo($relativePath, PATHINFO_FILENAME)
-                    . '.' . $config['export.fileExtension'];
-
-            $this->export($exportPath, $contentx);
+            $htmlProvider->setLayout('default.phtml');
+            $htmlProvider->setTitle($config['meta.title.default']);
+            $htmlProvider->compile(new SplFileInfo($file));
         }
     }
 
@@ -198,34 +174,8 @@ class Application
 
             $content = file_get_contents($file);
 
-            $this->export($exportPath, $content);
+            $this->exporter->export($exportPath, $content);
         }
-    }
-
-    /**
-     *
-     * @param string $exportPath
-     * @param string $content
-     */
-    public function export($exportPath, $content)
-    {
-        $ph = $this->pathHelper;
-
-        if (!file_exists(dirname($exportPath))) {
-            mkdir(dirname($exportPath), 0777, true);
-            echo '  [mkdir] ' . $ph->normalize(dirname($exportPath)) . PHP_EOL;
-        }
-
-        $normPath = $ph->normalize($exportPath);
-
-        if (strpos($normPath, getcwd()) === 0) {
-            $normPath = substr($normPath, strlen(getcwd()));
-            $normPath = ltrim($normPath, '/');
-        }
-
-        echo '  [export] ' . $normPath . PHP_EOL;
-
-        file_put_contents($exportPath, $content);
     }
 
     /**
