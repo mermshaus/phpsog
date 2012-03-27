@@ -19,15 +19,21 @@ $p = $pathToRoot;
 
     <body>
 
-        <a href="<?=$p?>/"><img src="<?=$p?>/images/phpsog.png" /></a>
+        <header>
+        <a href="<?=$p?>/"><img src="<?=$p?>/images/phpsog.png" /> phpsog</a>
+        </header>
 
-        <ul class="menu">
+        <ul class="cf menu">
             <li<?=($x['menuActive']==='home')?' class="active"':''?>><a href="<?=$p?>/">Home</a></li>
+            <li<?=($x['menuActive']==='docs/config')?' class="active"':''?>><a href="<?=$p?>/docs/config.html">Config</a></li>
             <li<?=($x['menuActive']==='about')?' class="active"':''?>><a href="<?=$p?>/about.html">About</a></li>
-            <li<?=($x['menuActive']==='contact')?' class="active"':''?>><a href="<?=$p?>/contact.html">Contact</a></li>
         </ul>
 
+        <div class="content">
+
         <?=$content?>
+
+        </div>
 
     </body>
 
