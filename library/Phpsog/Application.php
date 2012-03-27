@@ -4,9 +4,15 @@ namespace Phpsog;
 
 use Kaloa\Filesystem\PathHelper;
 use UnexpectedValueException;
+use Exception;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
+/**
+ *
+ * @param  string $s
+ * @return string
+ */
 function e($s)
 {
     return htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
@@ -14,13 +20,18 @@ function e($s)
 
 /**
  *
+ * @author Marc Ermshaus <marc@ermshaus.org>
  */
 class Application
 {
-    /** @var array */
+    /**
+     * @var array
+     */
     protected $config = array();
 
-    /** @var PathHelper */
+    /**
+     * @var PathHelper
+     */
     protected $pathHelper;
 
     /**
@@ -67,7 +78,7 @@ class Application
         $exportDir = $config['project.dir'] . '/' . $config['export.dir'];
 
         if (!is_writable($exportDir)) {
-            throw new \Exception('export directory '
+            throw new Exception('export directory '
                     . $this->pathHelper->normalize($exportDir)
                     . ' is not writable');
         }
@@ -100,7 +111,8 @@ class Application
 
         $ph = $this->pathHelper;
 
-        $dirIter = new \RecursiveDirectoryIterator($config['project.dir'] . '/' . $config['pages.dir']);
+        $dirIter = new \RecursiveDirectoryIterator($config['project.dir']
+                 . '/' . $config['pages.dir']);
         $recursiveIterator = new \RecursiveIteratorIterator($dirIter,
             \RecursiveIteratorIterator::SELF_FIRST,
             \RecursiveIteratorIterator::CATCH_GET_CHILD);
@@ -108,7 +120,7 @@ class Application
         $regexIterator = new \RegexIterator($recursiveIterator, '/\.phtml$/i');
 
         foreach ($regexIterator as $file => $unused) {
-                $layout = 'default.phtml';
+            $layout = 'default.phtml';
             $title  = $config['meta.title.default'];
 
             // Variables form extensions
@@ -119,7 +131,8 @@ class Application
             include $file;
 
             $content = ob_get_clean();
-            $tmp = substr($file, strlen($config['project.dir'] . '/' . $config['pages.dir'] . '/'));
+            $tmp = substr($file, strlen($config['project.dir']
+                 . '/' . $config['pages.dir'] . '/'));
 
             $ptr = str_repeat('../', substr_count($tmp, '/'));
 
@@ -134,13 +147,15 @@ class Application
                 'x'          => $x
             );
 
-            $contentx = $this->fillLayout($config['project.dir'] . '/'
-                    . $config['layouts.dir'] . '/' . $layout, $vars);
+            $contentx = $this->fillLayout($config['project.dir']
+                      . '/' . $config['layouts.dir'] . '/' . $layout, $vars);
 
-            $relativePath = substr($file, strlen($config['project.dir'] . '/' . $config['pages.dir'] . '/'));
+            $relativePath = substr($file, strlen($config['project.dir']
+                          . '/' . $config['pages.dir'] . '/'));
 
-            $exportPath = $config['project.dir'] . '/' . $config['export.dir'] . '/'
-                    . pathinfo($relativePath, PATHINFO_DIRNAME) . '/' . pathinfo($relativePath, PATHINFO_FILENAME)
+            $exportPath = $config['project.dir'] . '/' . $config['export.dir']
+                    . '/' . pathinfo($relativePath, PATHINFO_DIRNAME)
+                    . '/' . pathinfo($relativePath, PATHINFO_FILENAME)
                     . '.' . $config['export.fileExtension'];
 
             $this->export($exportPath, $contentx);
@@ -157,7 +172,8 @@ class Application
         $dirIter = null;
 
         try {
-            $dirIter = new RecursiveDirectoryIterator($config['project.dir'] . '/' . $config['resources.dir']);
+            $dirIter = new RecursiveDirectoryIterator($config['project.dir']
+                     . '/' . $config['resources.dir']);
         } catch (UnexpectedValueException $e) {
             echo '  Found no resource directory.' . PHP_EOL;
             return;
@@ -173,10 +189,12 @@ class Application
                 continue;
             }
 
-            $relativePath = substr($file, strlen($config['project.dir'] . '/' . $config['resources.dir'] . '/'));
+            $relativePath = substr($file, strlen($config['project.dir']
+                          . '/' . $config['resources.dir'] . '/'));
 
-            $exportPath = $config['project.dir'] . '/' . $config['export.dir'] . '/'
-                    . pathinfo($relativePath, PATHINFO_DIRNAME) . '/' . basename($relativePath);
+            $exportPath = $config['project.dir'] . '/' . $config['export.dir']
+                        . '/' . pathinfo($relativePath, PATHINFO_DIRNAME)
+                        . '/' . basename($relativePath);
 
             $content = file_get_contents($file);
 
@@ -212,13 +230,13 @@ class Application
 
     /**
      *
-     * @param array $config
-     * @param type $content
-     * @param array $title
-     * @param string $layout
-     * @param type $pathToRoot
-     * @param type $x
-     * @return type
+     * @param  array  $config
+     * @param  string $content
+     * @param  string $title
+     * @param  string $layout
+     * @param  string $pathToRoot
+     * @param  array  $x
+     * @return string
      */
     public function addVirtualPage(array $config, $content, $title = null,
             $layout = null, $pathToRoot = '.', $x = array())
