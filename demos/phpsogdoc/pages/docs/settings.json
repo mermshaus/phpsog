@@ -1,0 +1,52 @@
+{
+    "data": [
+        {
+            "name": "general.timezone",
+            "type": "string",
+            "default": "UTC",
+            "description": "The project’s time zone."
+        },
+        {
+            "name": "meta.title",
+            "type": "string",
+            "default": "Untitled",
+            "description": "The document title that will be used in case no title is specified for a page."
+        },
+        {
+            "name": "meta.title.suffix",
+            "type": "string",
+            "default": " – phpsog project",
+            "description": "The suffix will be appended to all page titles."
+        },
+        {
+            "name": "layouts.dir",
+            "type": "path",
+            "default": "layouts",
+            "description": "The directory the project’s layouts are stored in (relative to config file directory)."
+        },
+        {
+            "name": "pages.dir",
+            "type": "path",
+            "default": "pages",
+            "description": "The directory the project’s pages are stored in (relative to config file directory)."
+        },
+        {
+            "name": "resources.dir",
+            "type": "path",
+            "default": "resources",
+            "description": "The directory the project’s resources are stored in (relative to config file directory)."
+        },
+        {
+            "name": "export.dir",
+            "type": "path",
+            "default": "export",
+            "description": "The directory files will be exported to (relative to config file directory)."
+        },
+        {
+            "name": "export.fileExtension",
+            "type": "string",
+            "default": "html",
+            "description": "The file extension for exported pages."
+        }
+    ]
+}

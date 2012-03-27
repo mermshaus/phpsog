@@ -4,27 +4,27 @@ $title = 'Config';
 
 $x['menuActive'] = 'docs/config';
 
+$json = json_decode(file_get_contents(__DIR__ . '/settings.json'));
+
 ?>
+
+<h2>Steps</h2>
+
+<h3>Pages</h3>
 
 <h1>Config</h1>
 
 <h2>Settings</h2>
 
 <dl>
-    <dt><code>general.timezone</code> (string, default: "UTC")</dt>
-    <dd>The project’s time zone.</dd>
-    <dt><code>meta.title.default</code> (string, default: "Untitled")</dt>
-    <dd>The document title that will be used in case no title is specified for a page.</dd>
-    <dt><code>meta.title.suffix</code> (string, default: " – phpsog project")</dt>
-    <dd>The suffix will be appended to all page titles.</dd>
-    <dt><code>layouts.dir</code> (string, default: "layouts")</dt>
-    <dd>The directory the project’s layouts are stored in (relative to config file directory).</dd>
-    <dt><code>pages.dir</code> (string, default: "pages")</dt>
-    <dd>The directory the project’s pages are stored in (relative to config file directory).</dd>
-    <dt><code>resources.dir</code> (string, default: "resources")</dt>
-    <dd>The directory the project’s resources are stored in (relative to config file directory).</dd>
-    <dt><code>export.dir</code> (string, default: "export")</dt>
-    <dd>The directory files will be exported to (relative to config file directory).</dd>
-    <dt><code>export.fileExtension</code> (string, default: "html")</dt>
-    <dd>The file extension for exported pages.</dd>
+<?php foreach ($json->data as $d) : ?>
+
+    <?php if (in_array($d->type, array('string', 'path'))) {
+        $default = '"' . $d->default . '"';
+    } ?>
+
+<dt><code><?=$d->name?></code> (<?=$d->type?>, default: <?=$default?>)</dt>
+<dd><?=$d->description?></dd>
+
+<?php endforeach; ?>
 </dl>
