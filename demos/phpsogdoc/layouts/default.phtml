@@ -25,8 +25,10 @@ $p = $pathToRoot;
 
         <ul class="cf menu">
             <li<?=($x['menuActive']==='home')?' class="active"':''?>><a href="<?=$p?>/">Home</a></li>
-            <li<?=($x['menuActive']==='docs/config')?' class="active"':''?>><a href="<?=$p?>/docs/config.html">Config</a></li>
             <li<?=($x['menuActive']==='docs/concepts')?' class="active"':''?>><a href="<?=$p?>/docs/concepts.html">Concepts</a></li>
+            <li<?=($x['menuActive']==='docs/config')?' class="active"':''?>><a href="<?=$p?>/docs/config.html">Config</a></li>
+            <li<?=($x['menuActive']==='docs/cli')?' class="active"':''?>><a href="<?=$p?>/docs/cli.html">CLI</a></li>
+            <li<?=($x['menuActive']==='docs/recipes')?' class="active"':''?>><a href="<?=$p?>/docs/recipes.html">Recipes</a></li>
             <li<?=($x['menuActive']==='about')?' class="active"':''?>><a href="<?=$p?>/about.html">About</a></li>
         </ul>
 
