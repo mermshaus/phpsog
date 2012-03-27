@@ -7,6 +7,7 @@ use UnexpectedValueException;
 use Exception;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use RegexIterator;
 use SplFileInfo;
 
 use Phpsog\Provider\Html\Provider as HtmlProvider;
@@ -48,10 +49,10 @@ class Application
     /**
      *
      */
-    public function __construct()
+    public function __construct(Exporter $exporter, PathHelper $pathHelper)
     {
-        $this->pathHelper = new PathHelper();
-        $this->exporter = new Exporter($this->pathHelper);
+        $this->exporter   = $exporter;
+        $this->pathHelper = $pathHelper;
     }
 
     /**
@@ -121,15 +122,15 @@ class Application
     {
         $config = $this->config;
 
-        $dirIter = new \RecursiveDirectoryIterator($config['project.dir']
+        $dirIter = new RecursiveDirectoryIterator($config['project.dir']
                  . '/' . $config['pages.dir']);
-        $recursiveIterator = new \RecursiveIteratorIterator($dirIter,
-            \RecursiveIteratorIterator::SELF_FIRST,
-            \RecursiveIteratorIterator::CATCH_GET_CHILD);
+        $recursiveIterator = new RecursiveIteratorIterator($dirIter,
+            RecursiveIteratorIterator::SELF_FIRST,
+            RecursiveIteratorIterator::CATCH_GET_CHILD);
 
-        $regexIterator = new \RegexIterator($recursiveIterator, '/\.phtml$/i');
+        $regexIterator = new RegexIterator($recursiveIterator, '/\.phtml$/i');
 
-        $htmlProvider = new HtmlProvider($this->exporter, $this->config);
+        $htmlProvider = new HtmlProvider($this->config, $this->exporter, $this->pathHelper);
 
         foreach ($regexIterator as $file => $unused) {
             $htmlProvider->setLayout('default.phtml');

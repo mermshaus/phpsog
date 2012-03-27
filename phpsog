@@ -8,6 +8,8 @@ if ((!@include __DIR__.'/../../.composer/autoload.php') && (!@include __DIR__.'/
 }
 
 use Phpsog\Application;
+use Phpsog\Exporter;
+use Kaloa\Filesystem\PathHelper;
 
 try {
     $params = array(
@@ -24,7 +26,9 @@ try {
         $params['config'] .= '/phpsog.ini';
     }
 
-    $phpsog = new Application();
+    $ph = new PathHelper();
+
+    $phpsog = new Application(new Exporter($ph), $ph);
 
     $phpsog->loadConfig($params['config']);
 

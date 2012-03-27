@@ -27,25 +27,33 @@ class Provider
 
     /**
      *
-     * @var Exporter
-     */
-    protected $exporter;
-
-    /**
-     *
      * @var array
      */
     protected $config;
 
     /**
      *
-     * @param Exporter $exporter
-     * @param array    $config
+     * @var Exporter
      */
-    public function __construct(Exporter $exporter, array $config)
+    protected $exporter;
+
+    /**
+     *
+     * @var PathHelper
+     */
+    protected $pathHelper;
+
+    /**
+     *
+     * @param array      $config
+     * @param Exporter   $exporter
+     * @param PathHelper $pathHelper
+     */
+    public function __construct(array $config, Exporter $exporter, PathHelper $pathHelper)
     {
-        $this->exporter = $exporter;
-        $this->config   = $config;
+        $this->config     = $config;
+        $this->exporter   = $exporter;
+        $this->pathHelper = $pathHelper;
     }
 
     public function getTitle()
@@ -93,7 +101,6 @@ class Provider
     public function compile(SplFileInfo $file)
     {
         $file = $file->getPathname();
-        $ph = new PathHelper();
 
         $config = $this->config;
 
@@ -127,7 +134,7 @@ class Provider
         $vars = array(
             'title'      => $this->title . $config['meta.title.suffix'],
             'content'    => $content,
-            'pathToRoot' => $ph->normalize($ptr),
+            'pathToRoot' => $this->pathHelper->normalize($ptr),
             'x'          => $x
         );
 

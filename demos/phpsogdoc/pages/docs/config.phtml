@@ -1,16 +1,13 @@
 <?php
 
-$title = 'Config';
+/* @var $this Phpsog\Provider\Html\Provider */
+$this->setTitle('Config');
 
 $x['menuActive'] = 'docs/config';
 
 $json = json_decode(file_get_contents(__DIR__ . '/settings.json'));
 
 ?>
-
-<h2>Steps</h2>
-
-<h3>Pages</h3>
 
 <h1>Config</h1>
 
