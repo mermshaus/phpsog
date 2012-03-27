@@ -11,6 +11,7 @@ use RegexIterator;
 use SplFileInfo;
 
 use Phpsog\Provider\Html\Provider as HtmlProvider;
+use Phpsog\Provider\Asset\Provider as AssetProvider;
 
 use Phpsog\Exporter;
 
@@ -30,6 +31,8 @@ function e($s)
  */
 class Application
 {
+    const VERSION = '0.1.0';
+
     /**
      * @var array
      */
@@ -152,7 +155,7 @@ class Application
             $dirIter = new RecursiveDirectoryIterator($config['project.dir']
                      . '/' . $config['resources.dir']);
         } catch (UnexpectedValueException $e) {
-            echo '  Found no resource directory.' . PHP_EOL;
+            echo '  Found no resource directory.' . "\n";
             return;
         }
 
@@ -160,22 +163,15 @@ class Application
             RecursiveIteratorIterator::SELF_FIRST,
             RecursiveIteratorIterator::CATCH_GET_CHILD);
 
+        $provider = new AssetProvider($this->config, $this->exporter, $this->pathHelper);
+
         foreach ($recursiveIterator as $file => $unused) {
 
             if (!is_file($file)) {
                 continue;
             }
 
-            $relativePath = substr($file, strlen($config['project.dir']
-                          . '/' . $config['resources.dir'] . '/'));
-
-            $exportPath = $config['project.dir'] . '/' . $config['export.dir']
-                        . '/' . pathinfo($relativePath, PATHINFO_DIRNAME)
-                        . '/' . basename($relativePath);
-
-            $content = file_get_contents($file);
-
-            $this->exporter->export($exportPath, $content);
+            $provider->compile(new SplFileInfo($file));
         }
     }
 

@@ -6,10 +6,11 @@ use Phpsog\Exporter;
 use SplFileInfo;
 use Kaloa\Filesystem\PathHelper;
 
-use Phpsog\Provider\Html\View;
+#use Phpsog\Provider\Html\View;
 
 /**
  *
+ * @author Marc Ermshaus <marc@ermshaus.org>
  */
 class Provider
 {
@@ -49,7 +50,8 @@ class Provider
      * @param Exporter   $exporter
      * @param PathHelper $pathHelper
      */
-    public function __construct(array $config, Exporter $exporter, PathHelper $pathHelper)
+    public function __construct(array $config, Exporter $exporter,
+            PathHelper $pathHelper)
     {
         $this->config     = $config;
         $this->exporter   = $exporter;
@@ -139,7 +141,8 @@ class Provider
         );
 
         $contentx = $this->fillLayout($config['project.dir']
-                    . '/' . $config['layouts.dir'] . '/' . $this->layout, $vars);
+                    . '/' . $config['layouts.dir'] . '/' . $this->layout,
+                $vars);
 
         $relativePath = substr($file, strlen($config['project.dir']
                         . '/' . $config['pages.dir'] . '/'));
