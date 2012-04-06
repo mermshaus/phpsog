@@ -21,6 +21,9 @@ use Phpsog\Exporter;
  */
 class Application
 {
+    /**
+     * The package's version string
+     */
     const VERSION = '0.1.0';
 
     /**
@@ -41,6 +44,8 @@ class Application
 
     /**
      *
+     * @param Exporter   $exporter
+     * @param PathHelper $pathHelper
      */
     public function __construct(Exporter $exporter, PathHelper $pathHelper)
     {

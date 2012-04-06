@@ -6,6 +6,10 @@ use Kaloa\Filesystem\PathHelper;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Phpsog\ExportEvent;
 
+/**
+ * 
+ * @author Marc Ermshaus <marc@ermshaus.org>
+ */
 class Exporter
 {
     /**
@@ -18,19 +22,26 @@ class Exporter
      *
      * @var EventDispatcherInterface
      */
-    protected $logger;
+    protected $dispatcher;
 
     /**
      *
-     * @param PathHelper $pathHelper
+     * @param PathHelper               $pathHelper
+     * @param EventDispatcherInterface $dispatcher
      */
     public function __construct(PathHelper $pathHelper,
-            EventDispatcherInterface $logger)
+            EventDispatcherInterface $dispatcher)
     {
         $this->pathHelper = $pathHelper;
-        $this->logger     = $logger;
+        $this->dispatcher = $dispatcher;
     }
 
+    /**
+     *
+     * @param string $path
+     * @param int    $rights
+     * @param bool   $recursive
+     */
     public function mkdir($path, $rights = 0777, $recursive = true)
     {
         $normPath = $this->pathHelper->normalize($path);
@@ -41,7 +52,8 @@ class Exporter
         }
 
         mkdir($path, $rights, $recursive);
-        $this->logger->dispatch('onMkdir', new ExportEvent('[mkdir]  ' . $normPath));
+        $this->dispatcher->dispatch('onMkdir',
+                new ExportEvent('[mkdir]  ' . $normPath));
     }
 
     /**
@@ -64,6 +76,7 @@ class Exporter
 
         file_put_contents($exportPath, $content);
 
-        $this->logger->dispatch('onExport', new ExportEvent('[export] ' . $normPath));
+        $this->dispatcher->dispatch('onExport',
+                new ExportEvent('[export] ' . $normPath));
     }
 }
