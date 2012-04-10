@@ -15,6 +15,12 @@ use Phpsog\Provider\Asset\Provider as AssetProvider;
 
 use Phpsog\Exporter;
 
+use Phpsog\Logger;
+
+use Phpsog\Command\AbstractCommand;
+
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+
 /**
  *
  * @author Marc Ermshaus <marc@ermshaus.org>
@@ -32,6 +38,13 @@ class Application
     protected $config = array();
 
     /**
+     *
+     * @var Logger
+     */
+    protected $logger;
+
+    /**
+     *
      * @var PathHelper
      */
     protected $pathHelper;
@@ -44,12 +57,24 @@ class Application
 
     /**
      *
+     * @var EventDispatcherInterface
+     */
+    protected $dispatcher;
+
+    /**
+     *
+     * @param Logger     $logger
+     * @param EventDispatcherInterface $dispatcher
      * @param Exporter   $exporter
      * @param PathHelper $pathHelper
      */
-    public function __construct(Exporter $exporter, PathHelper $pathHelper)
+    public function __construct(Logger $logger, EventDispatcherInterface $dispatcher, Exporter $exporter, PathHelper $pathHelper)
     {
+        $this->logger     = $logger;
         $this->exporter   = $exporter;
+
+        $this->dispatcher = $dispatcher;
+
         $this->pathHelper = $pathHelper;
     }
 
@@ -153,5 +178,42 @@ class Application
                 $provider->compile(new SplFileInfo($file));
             }
         }
+    }
+
+    /**
+     *
+     * @param Logger $logger
+     */
+    public function setLogger($logger)
+    {
+        $this->logger = $logger;
+    }
+
+    /**
+     *
+     * @return Logger
+     */
+    public function getLogger()
+    {
+        return $this->logger;
+    }
+
+    public function getVersion()
+    {
+        return self::VERSION;
+    }
+
+    public function executeCommand(AbstractCommand $cmd)
+    {
+        $cmd->execute($this);
+    }
+
+    /**
+     *
+     * @return EventDispatcherInterface
+     */
+    public function getDispatcher()
+    {
+        return $this->dispatcher;
     }
 }

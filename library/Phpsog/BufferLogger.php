@@ -8,8 +8,10 @@ use Phpsog\ExportEvent;
  *
  * @author Marc Ermshaus <marc@ermshaus.org>
  */
-class Logger
+class BufferLogger extends Logger
 {
+    protected $log = '';
+
     public function onExport(ExportEvent $event)
     {
         $this->log($event->getMessage());
@@ -19,6 +21,11 @@ class Logger
     {
         //$text = preg_replace('/^/m', '  ', $text);
 
-        echo $text . "\n";
+        $this->log .= $text . "\n";
+    }
+
+    public function getLog()
+    {
+        return $this->log;
     }
 }

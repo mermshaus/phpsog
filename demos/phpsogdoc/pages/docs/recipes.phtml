@@ -9,4 +9,45 @@ $x['menuActive'] = 'docs/recipes';
 
 <h1>Recipes</h1>
 
-<h2>Writing a guestbook on top of phpsog</h2>
+
+
+<h2>Use phpsog globally on the system</h2>
+
+<p>There are many ways to achieve this. Here are two examples.</p>
+
+<ol>
+
+<li>
+    <p>Place a link to the phpsog executable in a directory on your $PATH.</p>
+
+    <pre><code>$ ln -s /path/to/phpsog ~/bin/phpsog</code></pre>
+
+    <p>To see which directories are on your $PATH:</p>
+
+    <pre><code>$ echo $PATH</code></pre>
+</li>
+
+<li>
+    <p>Create an alias in your ~/.bashrc file (or a comparable file).</p>
+
+    <pre><code>alias phpsog='/path/to/phpsog'</code></pre>
+</li>
+
+</ol>
+
+<p>Restart your terminal emulator or open a new one. You should now be able to run phpsog without specifying the full path.</p>
+
+<pre><code>$ phpsog version</code></pre>
+
+
+
+<h2>Automatically run phpsog on changes</h2>
+
+<p>There is no built-in mechanism to have phpsog watch for changes, yet. But it is possible to run the build process in a loop.</p>
+
+<pre><code>$ while true; do phpsog build path/to/project; sleep 5; done</code></pre>
+
+
+
+
+<!--<h2>Writing a guestbook on top of phpsog</h2>-->

@@ -11,68 +11,42 @@ if (
         'php composer.phar install'."\n");
 }
 
-use Phpsog\Application;
-use Phpsog\Exporter;
-use Phpsog\Logger;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Kaloa\Filesystem\PathHelper;
-use Phpsog\ExportEvent;
+use Phpsog\Command\BuildCommand;
+use Phpsog\Command\HelpCommand;
+use Phpsog\Command\InitCommand;
+use Phpsog\Command\UnknownCommand;
+use Phpsog\Command\VersionCommand;
+
+use Phpsog\Factory;
+
+// Convert internal errors to exceptions
+set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+    throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+});
 
 try {
-    $params = array(
-        'config' => ''
-    );
 
-    $dispatched = false;
+    $f = new Factory();
+    $app = $f->createNewApplication();
 
-    if ($_SERVER['argc'] !== 2) {
-        throw new Exception('Wrong argument count');
+    $argv = $_SERVER['argv'];
+
+    $cmd = null;
+
+    if ($argv[1] === 'version' || $argv[1] === '--version') {
+        $cmd = new VersionCommand($argv);
+    } else if ($argv[1] === 'init') {
+        $cmd = new InitCommand($argv);
+    } else if ($argv[1] === 'help' || $argv[1] === '--help') {
+        $cmd = new HelpCommand($argv);
+    } else if ($argv[1] === 'build') {
+        $cmd = new BuildCommand($argv);
     } else {
-        if ($_SERVER['argv'][1] === '--version') {
-            echo 'phpsog ' . Application::VERSION . "\n";
-            $dispatched = true;
-        } else {
-            $params['config'] = $_SERVER['argv'][1];
-        }
+        $cmd = new UnknownCommand($argv);
     }
 
-    if (!$dispatched) {
-        if (is_dir($params['config'])) {
-            $params['config'] .= '/phpsog.ini';
-        }
+    $app->executeCommand($cmd);
 
-        $ph         = new PathHelper();
-        $dispatcher = new EventDispatcher();
-        $exporter   = new Exporter($ph, $dispatcher);
-        $logger     = new Logger();
-        $adapt = function (ExportEvent $event) use ($logger) {
-            $logger->onExport($event);
-        };
-        $dispatcher->addListener('onExport', $adapt);
-        $dispatcher->addListener('onMkdir', $adapt);
-
-        $exportCounter = 0;
-        $mkdirCounter = 0;
-
-        $dispatcher->addListener('onExport', function () use (&$exportCounter) {
-            $exportCounter++;
-        });
-        $dispatcher->addListener('onMkdir', function () use (&$mkdirCounter) {
-            $mkdirCounter++;
-        });
-
-        $phpsog     = new Application($exporter, $ph);
-
-        $phpsog->loadConfig($params['config']);
-
-        $phpsog->sanitizeEnvironment();
-
-        $phpsog->processHtmlProvider();
-        $phpsog->processResources();
-
-        $logger->log("\n" . 'Event count:    Export: ' . $exportCounter
-                . '    Mkdir: ' . $mkdirCounter);
-    }
 } catch (Exception $e) {
     die('Error: ' . $e->getMessage() . "\n");
 }

@@ -13,22 +13,29 @@
 /* End hide from IE-mac */
 
 html {
-    background: #666;
-    font-family: sans-serif;
+    background: #f9f9f9;
+    background: url(http://people.ermshaus.org/marc/tmp/composerdb/assets/bg.png);
+	font-family: 'Open Sans', Ubuntu, Helvetica, sans-serif;
 }
 
 body {
-    background: #f9f9f9;
-    border: 0.5em solid #ddd;
+
     color: #222;
     width: 45em;
     padding: 2em;
     margin: 2em auto;
 }
 
+h1,h2,h3,h4,h5,h6 {
+    font-weight: normal;
+}
+
 .menu {
     list-style: none;
     padding: 0;
+    display: table;
+    margin: 0 auto;
+    margin-top: 20px;
 }
 
 .menu li {
@@ -38,7 +45,7 @@ body {
 .menu a {
     display: block;
     text-decoration: none;
-    padding: 5px 15px 5px 0;
+    padding: 5px 10px;
     color: #000;
 }
 
@@ -55,12 +62,14 @@ body {
 header {
     font-family: Georgia, serif;
     font-size: 30px;
+    text-align: center;
 }
 
 header img {
-    width: 40px;
-    height: 40px;
+    /*width: 40px;
+    height: 40px;*/
     vertical-align: middle;
+    opacity: 0.95;
 }
 
 header a {
@@ -78,8 +87,13 @@ pre, code {
 
 pre {
     border: 1px solid #ccc;
-    background: #eee;
+    background: #f9f9f9;
     padding: 1em;
+    overflow: auto;
+}
+
+code {
+    background: #f9f9f9;
 }
 
 footer {

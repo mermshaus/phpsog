@@ -7,7 +7,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Phpsog\ExportEvent;
 
 /**
- * 
+ *
  * @author Marc Ermshaus <marc@ermshaus.org>
  */
 class Exporter
