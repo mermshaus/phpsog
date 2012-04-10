@@ -29,6 +29,7 @@ EOT;
     public function execute(Application $application)
     {
         $logger = $application->getLogger();
+        $dispatcher = $application->getDispatcher();
         $argv = $this->argv;
 
         $params = array(
@@ -42,10 +43,10 @@ EOT;
         $adapt = function (ExportEvent $event) use ($logger) {
             $logger->onExport($event);
         };
-        $application->getDispatcher()->addListener('onExport', $adapt);
-        $application->getDispatcher()->addListener('onMkdir', $adapt);
+        $dispatcher->addListener('onExport', $adapt);
+        $dispatcher->addListener('onMkdir', $adapt);
 
-        /*$exportCounter = 0;
+        $exportCounter = 0;
         $mkdirCounter = 0;
 
         $dispatcher->addListener('onExport', function () use (&$exportCounter) {
@@ -53,7 +54,7 @@ EOT;
         });
         $dispatcher->addListener('onMkdir', function () use (&$mkdirCounter) {
             $mkdirCounter++;
-        });*/
+        });
 
         $application->loadConfig($params['config']);
 
@@ -62,7 +63,7 @@ EOT;
         $application->processHtmlProvider();
         $application->processResources();
 
-        /*$logger->log("\n" . 'Event count:    Export: ' . $exportCounter
-                . '    Mkdir: ' . $mkdirCounter);*/
+        $logger->log("\n" . 'Event count:    Export: ' . $exportCounter
+                . '    Mkdir: ' . $mkdirCounter);
     }
 }
