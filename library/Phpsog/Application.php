@@ -63,12 +63,27 @@ class Application
 
     /**
      *
+     * @var string
+     */
+    protected $phpsogDirectory;
+
+    /**
+     *
+     * @var string
+     */
+    protected $projectDirectory;
+
+    /**
+     *
      * @param Logger     $logger
      * @param EventDispatcherInterface $dispatcher
      * @param Exporter   $exporter
      * @param PathHelper $pathHelper
+     * @param string     $phpsogDirectory
+     * @param string     $projectDirectory
      */
-    public function __construct(Logger $logger, EventDispatcherInterface $dispatcher, Exporter $exporter, PathHelper $pathHelper)
+    public function __construct(Logger $logger, EventDispatcherInterface $dispatcher,
+            Exporter $exporter, PathHelper $pathHelper, $phpsogDirectory, $projectDirectory)
     {
         $this->logger     = $logger;
         $this->exporter   = $exporter;
@@ -76,6 +91,28 @@ class Application
         $this->dispatcher = $dispatcher;
 
         $this->pathHelper = $pathHelper;
+
+        if (substr($phpsogDirectory, 0, 1) !== '/') {
+            $phpsogDirectory = getcwd() . '/' . $phpsogDirectory;
+        }
+
+        if (substr($projectDirectory, 0, 1) !== '/') {
+            $projectDirectory = getcwd() . '/' . $projectDirectory;
+        }
+
+        $phpsogDirectory = $pathHelper->normalize($phpsogDirectory);
+        $projectDirectory = $pathHelper->normalize($projectDirectory);
+
+        if (!is_dir($phpsogDirectory)) {
+            throw new Exception('phpsog directory is not a valid directory');
+        }
+
+        if (!is_dir($projectDirectory)) {
+            throw new Exception('project directory is not a valid directory');
+        }
+
+        $this->phpsogDirectory = $phpsogDirectory;
+        $this->projectDirectory = $projectDirectory;
     }
 
     /**
@@ -87,7 +124,7 @@ class Application
     {
         $pathToConfig = realpath($pathToConfig);
 
-        $projectDir = realpath(dirname($pathToConfig));
+        $projectDir = realpath(dirname($pathToConfig) . '/../');
 
         $defaultConfig = parse_ini_file(__DIR__ . '/config.default.ini');
 
@@ -198,11 +235,19 @@ class Application
         return $this->logger;
     }
 
+    /**
+     *
+     * @return string
+     */
     public function getVersion()
     {
         return self::VERSION;
     }
 
+    /**
+     *
+     * @param AbstractCommand $cmd
+     */
     public function executeCommand(AbstractCommand $cmd)
     {
         $cmd->execute($this);
@@ -215,5 +260,43 @@ class Application
     public function getDispatcher()
     {
         return $this->dispatcher;
+    }
+
+    /**
+     *
+     * @return Exporter
+     */
+    public function getExporter()
+    {
+        return $this->exporter;
+    }
+
+    /**
+     *
+     * @param string $path
+     */
+    public function ensureProject($path)
+    {
+        $path .= '/.phpsog';
+
+        return (file_exists($path) && is_dir($path));
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getPhpsogDirectory()
+    {
+        return $this->phpsogDirectory;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getProjectDirectory()
+    {
+        return $this->projectDirectory;
     }
 }

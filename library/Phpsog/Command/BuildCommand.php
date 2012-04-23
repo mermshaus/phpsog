@@ -8,6 +8,8 @@ use Phpsog\Application;
 
 use Phpsog\ExportEvent;
 
+use Exception;
+
 /**
  *
  */
@@ -16,9 +18,8 @@ class BuildCommand extends AbstractCommand
     protected static $shortDescription = 'Compiles a project.';
 
     protected static $longDescription = <<<'EOT'
-Usage: phpsog build [--clean] [<path>]
+Usage: phpsog build [--clean]
 
-   <path>     Path to valid config file or directory with phpsog.ini file.
    --clean    Delete and recreate export directory before export.
 EOT;
 
@@ -30,15 +31,14 @@ EOT;
     {
         $logger = $application->getLogger();
         $dispatcher = $application->getDispatcher();
-        $argv = $this->argv;
 
-        $params = array(
-            'config' => $argv[2]
-        );
-
-        if (is_dir($params['config'])) {
-            $params['config'] .= '/phpsog.ini';
+        if (!$application->ensureProject($application->getProjectDirectory())) {
+            throw new Exception('There is no .phpsog directory.');
         }
+
+        $params = array();
+
+        $params['config'] = $application->getProjectDirectory() . '/.phpsog/phpsog.ini';
 
         $adapt = function (ExportEvent $event) use ($logger) {
             $logger->onExport($event);

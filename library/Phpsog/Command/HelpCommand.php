@@ -45,7 +45,8 @@ EOT;
                 );
             }
 
-            $logger->log('Usage: phpsog [--version] [--help] [<command>] [<args>]' . "\n");
+            $logger->log('Usage: phpsog [--version] [--help] [--phpsog-dir=<path>]' . "\n"
+                       . '              [--project-dir=<path>] <command> [<args>]' . "\n");
 
             $logger->log('The commands are:');
 

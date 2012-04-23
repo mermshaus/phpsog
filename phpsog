@@ -14,6 +14,7 @@ if (
 use Phpsog\Command\BuildCommand;
 use Phpsog\Command\HelpCommand;
 use Phpsog\Command\InitCommand;
+use Phpsog\Command\StatusCommand;
 use Phpsog\Command\UnknownCommand;
 use Phpsog\Command\VersionCommand;
 
@@ -25,28 +26,67 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
 });
 
 try {
-
-    $f = new Factory();
-    $app = $f->createNewApplication();
+    $phpsogDirectory = __DIR__;
+    $projectDirectory = getcwd();
 
     $argv = $_SERVER['argv'];
 
+    $newArgv = array();
+
+    // Here
+    foreach ($argv as $arg) {
+        switch (true) {
+            case (strpos($arg, '--phpsog-dir=') === 0):
+                $phpsogDirectory = substr($arg, strlen('--phpsog-dir='));
+                break;
+            case (strpos($arg, '--project-dir=') === 0):
+                $projectDirectory = substr($arg, strlen('--project-dir='));
+                break;
+            default:
+                $newArgv[] = $arg;
+                break;
+        }
+    }
+
+    $argv = $newArgv;
+
+
+
+    $f = new Factory();
+    $app = $f->createNewApplication($phpsogDirectory, $projectDirectory);
+
+
+
+    if (count($argv) === 1) {
+        array_push($argv, 'help');
+    }
+
     $cmd = null;
 
-    if ($argv[1] === 'version' || $argv[1] === '--version') {
-        $cmd = new VersionCommand($argv);
-    } else if ($argv[1] === 'init') {
-        $cmd = new InitCommand($argv);
-    } else if ($argv[1] === 'help' || $argv[1] === '--help') {
-        $cmd = new HelpCommand($argv);
-    } else if ($argv[1] === 'build') {
-        $cmd = new BuildCommand($argv);
-    } else {
-        $cmd = new UnknownCommand($argv);
+    switch (true) {
+        case ($argv[1] === 'version'):
+        case ($argv[1] === '--version'):
+            $cmd = new VersionCommand($argv);
+            break;
+        case ($argv[1] === 'help'):
+        case ($argv[1] === '--help'):
+            $cmd = new HelpCommand($argv);
+            break;
+        case ($argv[1] === 'init'):
+            $cmd = new InitCommand($argv);
+            break;
+        case ($argv[1] === 'build'):
+            $cmd = new BuildCommand($argv);
+            break;
+        case ($argv[1] === 'status'):
+            $cmd = new StatusCommand($argv);
+            break;
+        default:
+            $cmd = new UnknownCommand($argv);
+            break;
     }
 
     $app->executeCommand($cmd);
-
 } catch (Exception $e) {
     die('Error: ' . $e->getMessage() . "\n");
 }
