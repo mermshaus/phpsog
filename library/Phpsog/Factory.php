@@ -27,7 +27,7 @@ class Factory
             $projectDirectory = getcwd();
         }
 
-        $logger      = new Logger();
+        $logger      = new BufferLogger();
         $ph          = new PathHelper();
         $dispatcher  = new EventDispatcher();
         $exporter    = new Exporter($ph, $dispatcher);

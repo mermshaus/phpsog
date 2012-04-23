@@ -96,6 +96,40 @@ class Provider
         return ob_get_clean();
     }
 
+    public function addVirtualPage($file, $content)
+    {
+        $config = $this->config;
+
+        // Variables form extensions
+        $x = array();
+
+
+        $tmp = substr($file, strlen($config['project.dir']
+                . '/' . $config['pages.dir'] . '/'));
+
+        $ptr = str_repeat('../', substr_count($tmp, '/'));
+
+        if ($ptr === '') {
+            $ptr = './';
+        }
+
+        $vars = array(
+            'title'      => $this->title . $config['meta.title.suffix'],
+            'content'    => $content,
+            'pathToRoot' => $this->pathHelper->normalize($ptr),
+            'x'          => $x
+        );
+
+        $contentx = $this->fillLayout($config['project.dir']
+                    . '/' . $config['layouts.dir'] . '/' . $this->layout,
+                $vars);
+
+        $exportPath = $config['project.dir'] . '/' . $config['export.dir']
+                . '/' . $file;
+
+        $this->exporter->export($exportPath, $contentx);
+    }
+
     /**
      *
      * @param SplFileInfo $file
@@ -109,20 +143,9 @@ class Provider
         // Variables form extensions
         $x = array();
 
-
-
-
-
         ob_start();
-
         include $file;
-
         $content = ob_get_clean();
-
-
-
-
-
 
         $tmp = substr($file, strlen($config['project.dir']
                 . '/' . $config['pages.dir'] . '/'));

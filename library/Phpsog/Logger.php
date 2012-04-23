@@ -21,4 +21,9 @@ class Logger
 
         echo $text . "\n";
     }
+
+    public function flush()
+    {
+        echo '';
+    }
 }

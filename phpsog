@@ -87,6 +87,8 @@ try {
     }
 
     $app->executeCommand($cmd);
+
+    $app->getLogger()->flush();
 } catch (Exception $e) {
     die('Error: ' . $e->getMessage() . "\n");
 }

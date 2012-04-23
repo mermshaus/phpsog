@@ -28,4 +28,9 @@ class BufferLogger extends Logger
     {
         return $this->log;
     }
+
+    public function flush()
+    {
+        echo $this->getLog();
+    }
 }
