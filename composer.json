@@ -14,7 +14,7 @@
     ],
     "require": {
         "php":                      ">=5.3.2",
-        "kaloa/filesystem":         "*",
+        "kaloa/filesystem":         "dev-master",
         "symfony/event-dispatcher": "2.0.12"
     },
     "autoload": {

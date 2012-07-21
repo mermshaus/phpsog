@@ -1,15 +1,23 @@
 {
-    "hash": "2d5e683fe1dce8d3eacfd968674a9d64",
+    "hash": "7a8db4d0ab8dd1dd688fd697e9fa31de",
     "packages": [
         {
             "package": "kaloa/filesystem",
             "version": "dev-master",
-            "source-reference": "620d0aeb0ed41d3e0203c13eca9f360ed8d1cfd4"
+            "source-reference": "620d0aeb0ed41d3e0203c13eca9f360ed8d1cfd4",
+            "commit-date": "1331609082"
         },
         {
             "package": "symfony/event-dispatcher",
             "version": "v2.0.12"
         }
     ],
-    "aliases": []
+    "packages-dev": null,
+    "aliases": [
+
+    ],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "kaloa/filesystem": 20
+    }
 }
